@@ -1,6 +1,6 @@
 /* ==========================================================================
    Binkterm Door Button Filter Mod - Stylesheet
-   Uses native theme & Bootstrap 5 styles without overriding theme colors.
+   Zero-touch stylesheet that defers 100% of button styling to the active theme.
    https://github.com/thewebexpert/binkterm-php-doorButtonMod
    ========================================================================== */
 
@@ -23,23 +23,15 @@
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    font-weight: 500;
 }
 
-/* Let the count badge subtly complement the button state */
 .door-filter-toolbar .btn .badge {
     font-size: 0.72rem;
     padding: 0.25em 0.5em;
     border-radius: 50rem;
-    transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-.door-filter-toolbar .btn-check:checked + .btn .badge {
-    background-color: rgba(255, 255, 255, 0.28) !important;
-    color: inherit !important;
-}
-
-/* Smooth transition for card visibility */
+/* Card visibility transition */
 .game-card-col {
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
