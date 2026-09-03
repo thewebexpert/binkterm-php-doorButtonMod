@@ -2,7 +2,7 @@
  * ============================================================================
  * Binkterm Door Button Filter Mod
  * Dynamic Client-Side Door Filtering by Type
- * Uses native Bootstrap & active theme styles
+ * Uses native Bootstrap and active theme styles
  * https://github.com/thewebexpert/binkterm-php-doorButtonMod
  * ============================================================================
  */
@@ -105,7 +105,7 @@
             initialFilter = 'all'; // Graceful fallback if BBS has no RLogin doors
         }
 
-        // Build Toolbar HTML using native Bootstrap 5 radio button groups
+        // Build Toolbar HTML using native Bootstrap theme classes (btn-primary for active, btn-outline-secondary for inactive)
         const wrapper = document.createElement('div');
         wrapper.id = 'door-filter-toolbar';
         wrapper.className = 'door-filter-wrapper';
@@ -116,21 +116,18 @@
             const count = counts[t.key] || 0;
             // Only show buttons for categories that have games, plus 'ALL'
             if (count > 0 || t.key === 'all') {
-                const isChecked = (t.key === initialFilter) ? 'checked' : '';
-                const inputId = 'door_filter_' + t.key;
+                const isActive = (t.key === initialFilter);
+                const btnClass = isActive ? 'btn btn-primary active' : 'btn btn-outline-secondary';
+                const badgeClass = isActive ? 'badge bg-dark ms-1' : 'badge bg-secondary ms-1';
                 buttonsHtml += `
-                    <input type="radio"
-                           class="btn-check"
-                           name="door_type_filter"
-                           id="${inputId}"
-                           value="${t.key}"
-                           autocomplete="off"
-                           ${isChecked}>
-                    <label class="btn btn-outline-primary" for="${inputId}" title="Filter by ${t.label}">
+                    <button type="button"
+                            class="${btnClass} door-filter-btn"
+                            data-target="${t.key}"
+                            title="Filter by ${t.label}">
                         <i class="fas ${t.icon} me-1"></i>
                         <span>${t.label}</span>
-                        <span class="badge bg-secondary ms-1">${count}</span>
-                    </label>
+                        <span class="${badgeClass}">${count}</span>
+                    </button>
                 `;
             }
         });
@@ -165,11 +162,17 @@
                 }
             });
 
-            // Ensure radio input state is in sync
-            const radio = document.getElementById('door_filter_' + selectedType);
-            if (radio && !radio.checked) {
-                radio.checked = true;
-            }
+            // Update button styles: theme's btn-primary for active, btn-outline-secondary for inactive
+            wrapper.querySelectorAll('.door-filter-btn').forEach(function (btn) {
+                const badge = btn.querySelector('.badge');
+                if (btn.getAttribute('data-target') === selectedType) {
+                    btn.className = 'btn btn-primary active door-filter-btn';
+                    if (badge) badge.className = 'badge bg-dark ms-1';
+                } else {
+                    btn.className = 'btn btn-outline-secondary door-filter-btn';
+                    if (badge) badge.className = 'badge bg-secondary ms-1';
+                }
+            });
 
             // Handle empty state
             const emptyEl = document.getElementById('door-filter-empty');
@@ -196,12 +199,11 @@
             }
         }
 
-        // Attach change listeners to radio inputs
-        wrapper.querySelectorAll('input[name="door_type_filter"]').forEach(function (input) {
-            input.addEventListener('change', function () {
-                if (this.checked) {
-                    applyFilter(this.value, true);
-                }
+        // Attach click listeners to buttons
+        wrapper.querySelectorAll('.door-filter-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const target = this.getAttribute('data-target');
+                applyFilter(target, true);
             });
         });
 
