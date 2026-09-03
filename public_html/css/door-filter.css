@@ -1,5 +1,6 @@
 /* ==========================================================================
    Binkterm Door Button Filter Mod - Stylesheet
+   Uses native theme & Bootstrap 5 styles without overriding theme colors.
    https://github.com/thewebexpert/binkterm-php-doorButtonMod
    ========================================================================== */
 
@@ -16,85 +17,29 @@
 
 .door-filter-toolbar .btn-group {
     flex-wrap: wrap;
-    border-radius: 0.375rem;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
-.door-filter-btn {
-    font-weight: 500;
-    font-size: 0.875rem;
+.door-filter-toolbar .btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    padding: 0.4rem 0.85rem;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    background-color: var(--bs-card-bg, #fff);
-    color: var(--bs-body-color, #212529);
-    transition: all 0.15s ease-in-out;
-    cursor: pointer;
+    gap: 0.35rem;
+    font-weight: 500;
 }
 
-.door-filter-btn:hover {
-    background-color: rgba(var(--bs-primary-rgb, 13, 110, 253), 0.1);
-    color: var(--bs-primary, #0d6efd);
-    border-color: var(--bs-primary, #0d6efd);
-}
-
-.door-filter-btn.active {
-    background-color: var(--bs-primary, #0d6efd) !important;
-    color: #fff !important;
-    border-color: var(--bs-primary, #0d6efd) !important;
-}
-
-/* Color accents on active buttons matching door badge colors */
-.door-filter-btn[data-target="rlogin"].active {
-    background-color: #dc3545 !important;
-    border-color: #dc3545 !important;
-}
-
-.door-filter-btn[data-target="web"].active {
-    background-color: #198754 !important;
-    border-color: #198754 !important;
-}
-
-.door-filter-btn[data-target="native"].active {
-    background-color: #ffc107 !important;
-    border-color: #ffc107 !important;
-    color: #000 !important;
-}
-
-.door-filter-btn[data-target="dos"].active {
-    background-color: #0dcaf0 !important;
-    border-color: #0dcaf0 !important;
-    color: #000 !important;
-}
-
-.door-filter-btn[data-target="jsdos"].active {
-    background-color: #0d6efd !important;
-    border-color: #0d6efd !important;
-}
-
-.door-filter-btn .filter-count-badge {
+/* Let the count badge subtly complement the button state */
+.door-filter-toolbar .btn .badge {
     font-size: 0.72rem;
-    padding: 0.2em 0.5em;
+    padding: 0.25em 0.5em;
     border-radius: 50rem;
-    background-color: rgba(0, 0, 0, 0.08);
-    color: inherit;
-    font-weight: 600;
+    transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-.door-filter-btn.active .filter-count-badge {
-    background-color: rgba(255, 255, 255, 0.25);
-    color: inherit;
+.door-filter-toolbar .btn-check:checked + .btn .badge {
+    background-color: rgba(255, 255, 255, 0.28) !important;
+    color: inherit !important;
 }
 
-.door-filter-btn[data-target="native"].active .filter-count-badge,
-.door-filter-btn[data-target="dos"].active .filter-count-badge {
-    background-color: rgba(0, 0, 0, 0.15);
-}
-
-/* Card visibility transition */
+/* Smooth transition for card visibility */
 .game-card-col {
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
