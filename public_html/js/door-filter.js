@@ -105,7 +105,7 @@
             initialFilter = 'all'; // Graceful fallback if BBS has no RLogin doors
         }
 
-        // Build Toolbar HTML using native Bootstrap theme classes (btn-primary for active, btn-outline-secondary for inactive)
+        // Build Toolbar HTML using native Bootstrap theme classes
         const wrapper = document.createElement('div');
         wrapper.id = 'door-filter-toolbar';
         wrapper.className = 'door-filter-wrapper';
@@ -162,15 +162,23 @@
                 }
             });
 
-            // Update button styles: theme's btn-primary for active, btn-outline-secondary for inactive
+            // Update button styles cleanly without triggering transition flash
             wrapper.querySelectorAll('.door-filter-btn').forEach(function (btn) {
                 const badge = btn.querySelector('.badge');
                 if (btn.getAttribute('data-target') === selectedType) {
-                    btn.className = 'btn btn-primary active door-filter-btn';
-                    if (badge) badge.className = 'badge bg-dark ms-1';
+                    btn.classList.remove('btn-outline-secondary');
+                    btn.classList.add('btn-primary', 'active');
+                    if (badge) {
+                        badge.classList.remove('bg-secondary');
+                        badge.classList.add('bg-dark');
+                    }
                 } else {
-                    btn.className = 'btn btn-outline-secondary door-filter-btn';
-                    if (badge) badge.className = 'badge bg-secondary ms-1';
+                    btn.classList.remove('btn-primary', 'active');
+                    btn.classList.add('btn-outline-secondary');
+                    if (badge) {
+                        badge.classList.remove('bg-dark');
+                        badge.classList.add('bg-secondary');
+                    }
                 }
             });
 
@@ -202,6 +210,7 @@
         // Attach click listeners to buttons
         wrapper.querySelectorAll('.door-filter-btn').forEach(function (btn) {
             btn.addEventListener('click', function () {
+                this.blur(); // Drop focus immediately to avoid browser focus ring
                 const target = this.getAttribute('data-target');
                 applyFilter(target, true);
             });
