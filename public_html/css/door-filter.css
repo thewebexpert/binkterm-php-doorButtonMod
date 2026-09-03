@@ -23,12 +23,35 @@
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
+    /* Kill CSS transition to prevent Bootstrap blue interpolation flash */
+    transition: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Eliminate Bootstrap default blue focus rings, active outlines, and box shadows */
+.door-filter-toolbar .btn:focus,
+.door-filter-toolbar .btn:focus-visible,
+.door-filter-toolbar .btn:active,
+.door-filter-toolbar .btn.active {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Ensure inactive outline button doesn't flash background on click */
+.door-filter-toolbar .btn-outline-secondary {
+    background-color: transparent !important;
+}
+
+.door-filter-toolbar .btn-outline-secondary:hover {
+    background-color: inherit;
 }
 
 .door-filter-toolbar .btn .badge {
     font-size: 0.72rem;
     padding: 0.25em 0.5em;
     border-radius: 50rem;
+    pointer-events: none;
 }
 
 /* Card visibility transition */
