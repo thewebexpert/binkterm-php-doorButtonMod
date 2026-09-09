@@ -28,8 +28,8 @@
 
         // Available door types configuration
         const typeConfig = [
-            { key: 'doorparty', label: 'DOORPARTY', icon: 'fa-network-wired' },
             { key: 'rlogin',    label: 'RLOGIN',    icon: 'fa-server' },
+            { key: 'doorparty', label: 'DOORPARTY', icon: 'fa-network-wired' },
             { key: 'web',       label: 'WEB',       icon: 'fa-globe' },
             { key: 'native',    label: 'NATIVE',    icon: 'fa-terminal' },
             { key: 'dos',       label: 'DOS',       icon: 'fa-floppy-disk' },
@@ -118,15 +118,15 @@
         });
 
         // Determine default filter:
-        // Priority: 1. URL hash -> 2. 'doorparty' (if present) -> 3. 'rlogin' (if present) -> 4. 'all'
+        // Priority: 1. URL hash -> 2. 'rlogin' (if present) -> 3. 'doorparty' (if present) -> 4. 'all'
         let initialFilter = 'rlogin';
         const hash = window.location.hash.replace('#', '').toLowerCase();
         if (hash && (hash === 'all' || counts[hash] !== undefined)) {
             initialFilter = hash;
-        } else if (counts['doorparty'] > 0) {
-            initialFilter = 'doorparty';
         } else if (counts['rlogin'] > 0) {
             initialFilter = 'rlogin';
+        } else if (counts['doorparty'] > 0) {
+            initialFilter = 'doorparty';
         } else {
             initialFilter = 'all';
         }
