@@ -11,11 +11,12 @@ This mod dynamically injects a sleek category filter bar on the Binkterm Doors p
 ## Features
 
 - **Zero-Touch & Upgrade-Proof**: Never touches or modifies core BinktermPHP files. When you update Binkterm via `git pull upstream`, you will never get merge conflicts.
-- **RLOGIN by Default**: Immediately highlights your BBS's online RLogin doors (TradeWars 2002, DoorMUD, Usurper, etc.) as soon as the page loads.
+- **Dedicated DoorParty Category & Sorting**: Automatically identifies DoorParty network hub and direct-linked games (`dp-*`). Sorts the main DoorParty hub first, followed by individual direct games alphabetically, complete with a custom violet badge.
+- **Intelligent Default Selection**: Automatically selects **DOORPARTY** (or **RLOGIN**) by default as soon as the page loads.
 - **Dynamic Door Counts**: Counts the number of active doors for each type and displays them as badges directly on the buttons.
-- **Intelligent Category Discovery**: Automatically scans door cards and launch URLs (`/rlogindoors/`, `/dosdoors/`, `/nativedoors/`, `/webdoors/`, `/jsdos/`). Only categories with active doors are displayed.
+- **Intelligent Category Discovery**: Automatically scans door cards and launch URLs (`/doorparty`, `/rlogindoors/`, `/dosdoors/`, `/nativedoors/`, `/webdoors/`, `/jsdos/`). Only categories with active doors are displayed.
 - **Instant Filtering**: Pure client-side filtering with zero page reloads.
-- **Browser History & Deep Linking**: Supports URL hash navigation (e.g. `/games#rlogin`, `/games#web`, `/games#all`) with full Back/Forward browser button support.
+- **Browser History & Deep Linking**: Supports URL hash navigation (e.g. `/games#doorparty`, `/games#rlogin`, `/games#web`, `/games#all`) with full Back/Forward browser button support.
 - **Theme-Integrated**: Uses Bootstrap 5 styling with accent badges matching Binkterm's native door color badges.
 
 ---
