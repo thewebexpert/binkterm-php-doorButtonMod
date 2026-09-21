@@ -78,6 +78,15 @@
     box-shadow: 0 1px 3px rgba(124, 58, 237, 0.4);
 }
 
+/* BBSLink Card Badge */
+.badge-bbslink {
+    background: linear-gradient(135deg, #0284c7, #06b6d4) !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 1px 3px rgba(2, 132, 199, 0.4);
+}
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(4px); }
     to { opacity: 1; transform: translateY(0); }

@@ -30,6 +30,7 @@
         const typeConfig = [
             { key: 'rlogin',    label: 'RLOGIN',    icon: 'fa-server' },
             { key: 'doorparty', label: 'DOORPARTY', icon: 'fa-network-wired' },
+            { key: 'bbslink',   label: 'BBSLINK',   icon: 'fa-link' },
             { key: 'web',       label: 'WEB',       icon: 'fa-globe' },
             { key: 'native',    label: 'NATIVE',    icon: 'fa-terminal' },
             { key: 'dos',       label: 'DOS',       icon: 'fa-floppy-disk' },
@@ -40,6 +41,7 @@
         const counts = {
             all: gameCards.length,
             doorparty: 0,
+            bbslink: 0,
             rlogin: 0,
             web: 0,
             native: 0,
@@ -56,8 +58,9 @@
 
             let type = 'web'; // fallback
             let isDoorParty = false;
+            let isBbsLink = false;
 
-            // 1. Check card launch URL and title for DoorParty identification
+            // 1. Check card launch URL and title for DoorParty and BBSLink identification
             const launchBtn = card.querySelector('a.btn[href*="/games/"]');
             const href = launchBtn ? (launchBtn.getAttribute('href') || '') : '';
             const titleEl = card.querySelector('.card-title');
@@ -68,6 +71,11 @@
                 isDoorParty = true;
             }
 
+            if (href.includes('bbslink') ||
+                titleText.toLowerCase().includes('bbslink') || titleText.toLowerCase().includes('bbs link')) {
+                isBbsLink = true;
+            }
+
             // 2. Check badge in card title
             const badge = card.querySelector('.card-title .badge');
             if (badge) {
@@ -76,6 +84,10 @@
                     type = 'doorparty';
                     badge.textContent = 'DOORPARTY';
                     badge.className = 'badge badge-doorparty text-white';
+                } else if (isBbsLink) {
+                    type = 'bbslink';
+                    badge.textContent = 'BBSLINK';
+                    badge.className = 'badge badge-bbslink text-white';
                 } else if (badgeText.includes('RLOGIN') || badge.classList.contains('bg-danger')) {
                     type = 'rlogin';
                 } else if (badgeText.includes('NATIVE') || badge.classList.contains('bg-warning')) {
@@ -89,10 +101,12 @@
                 }
             } else if (isDoorParty) {
                 type = 'doorparty';
+            } else if (isBbsLink) {
+                type = 'bbslink';
             }
 
-            // 3. Cross-verify non-doorparty cards with launch button href
-            if (!isDoorParty && launchBtn) {
+            // 3. Cross-verify non-network cards with launch button href
+            if (!isDoorParty && !isBbsLink && launchBtn) {
                 if (href.includes('/rlogindoors/')) {
                     type = 'rlogin';
                 } else if (href.includes('/nativedoors/')) {
@@ -110,6 +124,11 @@
                 const isMainHub = (href.endsWith('/doorparty') || href.endsWith('/doorparty/'));
                 col.dataset.isDoorpartyHub = isMainHub ? 'true' : 'false';
                 col.dataset.doorTitle = titleText.replace(/doorparty/gi, '').trim();
+
+                // Tag whether it is the main BBSLink hub vs direct game
+                const isBbslinkHub = (href.endsWith('/bbslink') || href.endsWith('/bbslinknative') || href.endsWith('/bbslink/'));
+                col.dataset.isBbslinkHub = isBbslinkHub ? 'true' : 'false';
+                col.dataset.bbslinkTitle = titleText.replace(/bbslink/gi, '').trim();
             }
 
             if (typeof counts[type] === 'number') {
@@ -118,7 +137,7 @@
         });
 
         // Determine default filter:
-        // Priority: 1. URL hash -> 2. 'rlogin' (if present) -> 3. 'doorparty' (if present) -> 4. 'all'
+        // Priority: 1. URL hash -> 2. 'rlogin' (if present) -> 3. 'doorparty' (if present) -> 4. 'bbslink' (if present) -> 5. 'all'
         let initialFilter = 'rlogin';
         const hash = window.location.hash.replace('#', '').toLowerCase();
         if (hash && (hash === 'all' || counts[hash] !== undefined)) {
@@ -127,6 +146,8 @@
             initialFilter = 'rlogin';
         } else if (counts['doorparty'] > 0) {
             initialFilter = 'doorparty';
+        } else if (counts['bbslink'] > 0) {
+            initialFilter = 'bbslink';
         } else {
             initialFilter = 'all';
         }
@@ -192,6 +213,24 @@
             }
         }
 
+        // Sort BBSLink cards so main gateway hub is #1, followed by direct games alphabetically
+        function sortBbsLinkCards() {
+            const cols = Array.from(cardsContainer.querySelectorAll('.game-card-col'));
+            const blCols = cols.filter(col => col.dataset.doorType === 'bbslink');
+            
+            blCols.sort(function (a, b) {
+                const aIsHub = a.dataset.isBbslinkHub === 'true';
+                const bIsHub = b.dataset.isBbslinkHub === 'true';
+                if (aIsHub && !bIsHub) return -1;
+                if (!aIsHub && bIsHub) return 1;
+                return (a.dataset.bbslinkTitle || '').localeCompare(b.dataset.bbslinkTitle || '');
+            });
+
+            for (let i = blCols.length - 1; i >= 0; i--) {
+                cardsContainer.prepend(blCols[i]);
+            }
+        }
+
         // Filter function
         function applyFilter(selectedType, updateHash) {
             let visibleCount = 0;
@@ -199,6 +238,8 @@
 
             if (selectedType === 'doorparty') {
                 sortDoorPartyCards();
+            } else if (selectedType === 'bbslink') {
+                sortBbsLinkCards();
             }
 
             cols.forEach(function (col) {

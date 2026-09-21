@@ -54,6 +54,15 @@ else
     fi
 fi
 
+# 4. Docker live update (if binkterm-app container is running)
+if command -v docker >/dev/null 2>&1 && docker ps --format '{{.Names}}' | grep -q "^binkterm-app$"; then
+    echo "[*] Detected running binkterm-app container. Syncing assets..."
+    docker cp "$SCRIPT_DIR/public_html/js/door-filter.js" binkterm-app:/var/www/html/public_html/js/door-filter.js
+    docker cp "$SCRIPT_DIR/public_html/css/door-filter.css" binkterm-app:/var/www/html/public_html/css/door-filter.css
+    docker cp "$HEADER_INSERT" binkterm-app:/var/www/html/templates/custom/header.insert.twig
+    echo "[✓] Successfully synced to binkterm-app container"
+fi
+
 echo ""
 echo "Installation complete! Door filtering is now active on /games."
 echo "RLOGIN doors will be selected by default."
